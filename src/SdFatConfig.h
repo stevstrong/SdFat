@@ -28,6 +28,7 @@
  */
 #ifndef SdFatConfig_h
 #define SdFatConfig_h
+#include <Arduino.h>
 #include <stdint.h>
 #ifdef __AVR__
 #include <avr/io.h>
@@ -76,6 +77,16 @@
  * the class SdFatSoftSpiEX will be defined.
  */
 #define ENABLE_SOFTWARE_SPI_CLASS 0
+//------------------------------------------------------------------------------
+/**
+ * If CHECK_FLASH_PROGRAMMING is zero, overlap of single sector flash 
+ * programming and other operations will be allowed for faster write
+ * performance.
+ *
+ * Some cards will not sleep in low power mode unless CHECK_FLASH_PROGRAMMING
+ * is non-zero.
+ */
+#define CHECK_FLASH_PROGRAMMING 1
 //------------------------------------------------------------------------------
 /**
  * Set MAINTAIN_FREE_CLUSTER_COUNT nonzero to keep the count of free clusters
