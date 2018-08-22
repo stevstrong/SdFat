@@ -86,11 +86,11 @@ uint8_t SdSpiAltDriver::receive() {
  */
 uint8_t SdSpiAltDriver::receive(uint8_t* buf, size_t n) {
 #if USE_STM32_DMA
-  return m_spi->dmaTransfer(0, buf, n);
+  m_spi->dmaTransfer(0xFF, buf, n);
 #else  // USE_STM32_DMA
   m_spi->read(buf, n);
-  return 0;
 #endif  // USE_STM32_DMA
+  return 0;
 }
 //------------------------------------------------------------------------------
 /** Send a byte.
@@ -98,7 +98,7 @@ uint8_t SdSpiAltDriver::receive(uint8_t* buf, size_t n) {
  * \param[in] b Byte to send
  */
 void SdSpiAltDriver::send(uint8_t b) {
-  m_spi->transfer(b);
+  m_spi->write(b);
 }
 //------------------------------------------------------------------------------
 /** Send multiple bytes.
@@ -108,7 +108,7 @@ void SdSpiAltDriver::send(uint8_t b) {
  */
 void SdSpiAltDriver::send(const uint8_t* buf , size_t n) {
 #if USE_STM32_DMA
-  m_spi->dmaTransfer(const_cast<uint8*>(buf), 0, n);
+  m_spi->dmaSend(const_cast<uint8*>(buf), n);
 #else  // USE_STM32_DMA
   m_spi->write(const_cast<uint8*>(buf), n);
 #endif  // USE_STM32_DMA
