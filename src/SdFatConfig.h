@@ -62,7 +62,7 @@
  * These classes used extended multi-block SD I/O for better performance.
  * the SPI bus may not be shared with other devices in this mode.
  */
-#define ENABLE_EXTENDED_TRANSFER_CLASS 0
+#define ENABLE_EXTENDED_TRANSFER_CLASS 1
 //-----------------------------------------------------------------------------
 /**
  * If the symbol USE_STANDARD_SPI_LIBRARY is nonzero, the classes SdFat and
@@ -187,9 +187,11 @@
  * Determine the default SPI configuration.
  */
 #if defined(__STM32F1__)
+#define USE_STM32_DMA 1
 // has multiple SPI ports
 #define SD_HAS_CUSTOM_SPI 2
 #elif defined(__STM32F4__)
+#define USE_STM32_DMA 1
 // has 3 SPI ports
 #define SD_HAS_CUSTOM_SPI 3
 #elif defined(__AVR__)\

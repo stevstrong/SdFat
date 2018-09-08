@@ -24,21 +24,7 @@
  */
 #if defined(__STM32F1__) || defined(__STM32F4__)
 #include "SdSpiDriver.h"
-#if defined(__STM32F1__)
-#define USE_STM32_DMA 1
-#elif defined(__STM32F4__)
-#define USE_STM32_DMA 1
-#else  // defined(__STM32F1__)
-#error Unknown STM32 type
-#endif  // defined(__STM32F1__)
 //------------------------------------------------------------------------------
-static SPIClass m_SPI1(1);
-#if BOARD_NR_SPI >= 2
-static SPIClass m_SPI2(2);
-#endif  // BOARD_NR_SPI >= 2
-#if BOARD_NR_SPI >= 3
-static SPIClass m_SPI3(3);
-#endif  // BOARD_NR_SPI >= 3
 #if BOARD_NR_SPI > 3
 #error BOARD_NR_SPI too large
 #endif
@@ -85,8 +71,12 @@ uint8_t SdSpiAltDriver::receive() {
  * \return Zero for no error or nonzero error code.
  */
 uint8_t SdSpiAltDriver::receive(uint8_t* buf, size_t n) {
+//	Serial.print("SdSpiAltDriver::receive "); Serial.print((uint32)buf, HEX); Serial.print("::"); Serial.println(n);
 #if USE_STM32_DMA
-  m_spi->dmaTransfer(0xFF, buf, n);
+if (n>250)
+  m_spi->dmaTransfer((uint8_t)0x00, buf, n);
+else
+  m_spi->read(buf, n);
 #else  // USE_STM32_DMA
   m_spi->read(buf, n);
 #endif  // USE_STM32_DMA
@@ -108,23 +98,20 @@ void SdSpiAltDriver::send(uint8_t b) {
  */
 void SdSpiAltDriver::send(const uint8_t* buf , size_t n) {
 #if USE_STM32_DMA
-  m_spi->dmaSend(const_cast<uint8*>(buf), n);
+if (n>250)
+  m_spi->dmaSend(buf, n);
+else
+  m_spi->write(buf, n);
 #else  // USE_STM32_DMA
-  m_spi->write(const_cast<uint8*>(buf), n);
+  m_spi->write(buf, n);
 #endif  // USE_STM32_DMA
 }
 //------------------------------------------------------------------------------
 void SdSpiAltDriver::setPort(uint8_t portNumber) {
-  m_spi = &m_SPI1;
-#if BOARD_NR_SPI >= 2
-  if (portNumber == 2) {
-    m_spi = &m_SPI2;
-  }
-#endif  // BOARD_NR_SPI >= 2
-#if BOARD_NR_SPI >= 3
-  if (portNumber == 3) {
-    m_spi = &m_SPI3;
-  }
-#endif  // BOARD_NR_SPI >= 2
+
+  if (portNumber > BOARD_NR_SPI) return;
+  if (portNumber == 0) portNumber ++;
+  m_spi = &SPI;
+  SPI.setModule(portNumber);
 }
 #endif  // defined(__STM32F1__) || defined(__STM32F4__)
