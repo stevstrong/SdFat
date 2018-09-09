@@ -475,7 +475,7 @@ fail:
 //-----------------------------------------------------------------------------
 void SdSpiCard::spiStart() {
   if (!m_spiActive) {
-    spiActivate();
+    //spiActivate();
     spiSelect();
     m_spiActive = true;
   }
@@ -484,8 +484,8 @@ void SdSpiCard::spiStart() {
 void SdSpiCard::spiStop() {
   if (m_spiActive) {
     spiUnselect();
-    spiSend(0XFF);
-    spiDeactivate();
+    //spiSend(0XFF);
+    //spiDeactivate();
     m_spiActive = false;
   }
 }
