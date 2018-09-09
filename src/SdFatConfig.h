@@ -199,6 +199,8 @@
 #elif defined(__STM32F4__)
  #define USE_STM32_DMA 1
  #define SD_HAS_CUSTOM_SPI 3 // has 3 SPI ports
+ // DO NOT ENABLE SDIOEX_CLASS! Will destroy the file structure on the card!
+ #define ENABLE_SDIOEX_CLASS 0
 #elif defined(__AVR__)\
   || defined(__SAM3X8E__) || defined(__SAM3X8H__)\
   || (defined(__arm__) && defined(CORE_TEENSY))\

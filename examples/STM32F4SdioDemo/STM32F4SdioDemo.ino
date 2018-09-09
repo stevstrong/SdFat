@@ -11,6 +11,7 @@ const int32_t BUF_DIM = 32768;
 // 8 MiB file.
 const uint32_t FILE_SIZE = 256UL*BUF_DIM;
 
+//SdFatSdioEX sd; // DO NOT USE! Will destroy the file structure on the card!
 SdFatSdio sd;
 
 File file;
@@ -260,8 +261,8 @@ void volDmp() {
 //-----------------------------------------------------------------------------
 void setup() {
   Serial.begin(115200);
-  //while (!Serial) ;
-  delay(3000);
+  while (!Serial); delay(10);
+
   cout << ("######################################################\n");
   cout << ("  Demo sketch of STM32F4 SDIO (DMA) implementation.\n"); 
   cout << ("######################################################\n");
