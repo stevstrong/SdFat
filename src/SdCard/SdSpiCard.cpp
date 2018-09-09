@@ -129,6 +129,7 @@ bool SdSpiCard::begin(SdSpiDriver* spi, uint8_t csPin, SPISettings settings) {
 
   m_spiDriver->begin(csPin);
   m_spiDriver->setSpiSettings(SD_SCK_HZ(250000));
+  m_spiDriver->activate();
   spiStart();
 
   // must supply min of 74 clock cycles with CS high.
@@ -194,6 +195,7 @@ bool SdSpiCard::begin(SdSpiDriver* spi, uint8_t csPin, SPISettings settings) {
   }
   spiStop();
   m_spiDriver->setSpiSettings(settings);
+  m_spiDriver->activate();
   return true;
 
 fail:
