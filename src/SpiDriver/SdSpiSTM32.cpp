@@ -25,10 +25,6 @@
 #if defined(__STM32F1__) || defined(__STM32F4__)
 #include "SdSpiDriver.h"
 //------------------------------------------------------------------------------
-#if BOARD_NR_SPI > 3
-#error BOARD_NR_SPI too large
-#endif
-//------------------------------------------------------------------------------
 /** Set SPI options for access to SD/SDHC cards.
  *
  * \param[in] divisor SCK clock divider relative to the APB1 or APB2 clock.
@@ -104,13 +100,5 @@ else
 #else  // USE_STM32_DMA
   m_spi->write(buf, n);
 #endif  // USE_STM32_DMA
-}
-//------------------------------------------------------------------------------
-void SdSpiAltDriver::setPort(uint8_t portNumber) {
-
-  if (portNumber > BOARD_NR_SPI) return;
-  if (portNumber == 0) portNumber ++;
-  m_spi = &SPI;
-  SPI.setModule(portNumber);
 }
 #endif  // defined(__STM32F1__) || defined(__STM32F4__)
