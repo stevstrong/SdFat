@@ -211,8 +211,7 @@
 /**
  * Determine the default SPI configuration.
  */
-<<<<<<< HEAD
-
+// configure multiple SPI ports, if available
 #if defined(__STM32F1__)
  #define USE_STM32_DMA 1
  #define SD_HAS_CUSTOM_SPI 2 // has 2 SPI ports
@@ -221,11 +220,8 @@
  #define SD_HAS_CUSTOM_SPI 3 // has 3 SPI ports
  // DO NOT ENABLE SDIOEX_CLASS! Will destroy the file structure on the card!
  #define ENABLE_SDIOEX_CLASS 0
-=======
-#if defined(__STM32F1__) || defined(__STM32F4__) || defined(PLATFORM_ID)
-// has multiple SPI ports
+#elif defined(PLATFORM_ID)
 #define SD_HAS_CUSTOM_SPI 2
->>>>>>> refs/remotes/greiman/master
 #elif defined(__AVR__)\
   || defined(__SAM3X8E__) || defined(__SAM3X8H__)\
   || (defined(__arm__) && defined(CORE_TEENSY))\
