@@ -149,6 +149,12 @@ void FatFile::printFatDate(print_t* pr, uint16_t fatDate) {
   pr->write('-');
   print2u(pr, FAT_DAY(fatDate));
 }
+#include "itoa.h"
+//------------------------------------------------------------------------------
+void FatFile::getFatDate(char* pr, uint16_t fatDate)
+{
+  sprintf(pr, "%04d%02d%02d", FAT_YEAR(fatDate), FAT_MONTH(fatDate), FAT_DAY(fatDate));
+}
 //------------------------------------------------------------------------------
 void FatFile::printFatTime(print_t* pr, uint16_t fatTime) {
   print2u(pr, FAT_HOUR(fatTime));
@@ -156,6 +162,11 @@ void FatFile::printFatTime(print_t* pr, uint16_t fatTime) {
   print2u(pr, FAT_MINUTE(fatTime));
   pr->write(':');
   print2u(pr, FAT_SECOND(fatTime));
+}
+//------------------------------------------------------------------------------
+void FatFile::getFatTime(char* pr, uint16_t fatTime)
+{
+  sprintf(pr, "%02d%02d%02d", FAT_HOUR(fatTime), FAT_MINUTE(fatTime), FAT_SECOND(fatTime));
 }
 //------------------------------------------------------------------------------
 /** Template for FatFile::printField() */
@@ -234,6 +245,21 @@ bool FatFile::printModifyDateTime(print_t* pr) {
   printFatDate(pr, dir.lastWriteDate);
   pr->write(' ');
   printFatTime(pr, dir.lastWriteTime);
+  return true;
+
+fail:
+  return false;
+}
+//------------------------------------------------------------------------------
+bool FatFile::getModifyDateTime(char* pr)
+{
+  dir_t dir;
+  if (!dirEntry(&dir)) {
+    DBG_FAIL_MACRO;
+    goto fail;
+  }
+  getFatDate(pr, dir.lastWriteDate);
+  getFatTime(pr+8, dir.lastWriteTime);
   return true;
 
 fail:

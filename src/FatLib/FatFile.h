@@ -154,6 +154,7 @@ class FatFile {
   static void printFatDate(uint16_t fatDate) {
     printFatDate(&Serial, fatDate);
   }
+  
   /** %Print a directory time field.
    *
    * Format is hh:mm:ss.
@@ -364,6 +365,10 @@ class FatFile {
   uint32_t firstCluster() const {
     return m_firstCluster;
   }
+  
+  void getFatDate(char* pr, uint16_t fatDate);
+  void getFatTime(char* pr, uint16_t fatTime);
+  bool getModifyDateTime(char* pr);
   /**
    * Get a file's name followed by a zero byte.
    *
