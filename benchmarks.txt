@@ -1,0 +1,193 @@
+-------------------------------------------------------------------------
+SPI1
+-------------------------------------------------------------------------
+
+FreeStack: 62808
+Type is FAT16
+Card size: 1.97 GB (GB = 1E9 bytes)
+
+Manufacturer ID: 0X27
+OEM ID: PH
+Product: SD02G
+Version: 3.0
+Serial number: 0X97BDBF7C
+Manufacturing date: 8/2011
+
+File size 5 MB
+Buffer size 512 bytes
+Starting write test, please wait.
+
+write speed and latency
+speed,max,min,avg
+KB/Sec,usec,usec,usec
+176.03,145054,1502,2898
+176.91,154103,1502,2884
+
+Starting read test, please wait.
+
+read speed and latency
+speed,max,min,avg
+KB/Sec,usec,usec,usec
+868.15,780,534,589
+868.30,780,534,589
+
+
+------------------------
+SdFatEX
+------------------------
+Sketch uses 37232 bytes (7%) of program storage space. Maximum is 514288 bytes.
+Global variables use 7936 bytes (6%) of dynamic memory, leaving 123136 bytes for local variables. Maximum is 131072 bytes.
+
+FreeStack: 62808
+Type is FAT16
+Card size: 1.97 GB (GB = 1E9 bytes)
+
+Manufacturer ID: 0X27
+OEM ID: PH
+Product: SD02G
+Version: 3.0
+Serial number: 0X97BDBF7C
+Manufacturing date: 8/2011
+
+File size 5 MB
+Buffer size 512 bytes
+Starting write test, please wait.
+
+write speed and latency
+speed,max,min,avg
+KB/Sec,usec,usec,usec
+1746.31,140137,108,286
+1742.05,148979,108,288
+
+Starting read test, please wait.
+
+read speed and latency
+speed,max,min,avg
+KB/Sec,usec,usec,usec
+4703.37,2612,107,108
+4707.80,1102,107,108
+
+*****************************
+
+FFreeStack: 62808
+Type is FAT16
+Card size: 1.97 GB (GB = 1E9 bytes)
+
+Manufacturer ID: 0X2
+OEM ID: TM
+Product: SA02G
+Version: 0.3
+Serial number: 0XA07C6B9C
+Manufacturing date: 12/2008
+
+File size 5 MB
+Buffer size 512 bytes
+Starting write test, please wait.
+
+write speed and latency
+speed,max,min,avg
+KB/Sec,usec,usec,usec
+3385.02,209359,108,149
+2963.65,210126,108,149
+
+Starting read test, please wait.
+
+read speed and latency
+speed,max,min,avg
+KB/Sec,usec,usec,usec
+4676.97,6651,107,108
+4698.95,1297,107,108
+
+
+-------------------------------------------------------------------------
+SDIO
+-------------------------------------------------------------------------
+
+FreeStack: 62855
+Type is FAT16
+Card size: 1.97 GB (GB = 1E9 bytes)
+
+Manufacturer ID: 0X2
+OEM ID: TM
+Product: SA02G
+Version: 0.3
+Serial number: 0XA07C6B9C
+Manufacturing date: 12/2008
+
+File size 5 MB
+Buffer size 512 bytes
+Starting write test, please wait.
+
+write speed and latency
+speed,max,min,avg
+KB/Sec,usec,usec,usec
+79.85,214882,62,6409
+79.53,213834,2298,6435
+
+Starting read test, please wait.
+
+read speed and latency
+speed,max,min,avg
+KB/Sec,usec,usec,usec
+820.02,6708,376,623
+820.70,1060,376,623
+
+******************************
+
+FreeStack: 62855
+Type is FAT16
+Card size: 1.97 GB (GB = 1E9 bytes)
+
+Manufacturer ID: 0X27
+OEM ID: PH
+Product: SD02G
+Version: 3.0
+Serial number: 0X97BDBF7C
+Manufacturing date: 8/2011
+
+File size 5 MB
+Buffer size 512 bytes
+Starting write test, please wait.
+
+write speed and latency
+speed,max,min,avg
+KB/Sec,usec,usec,usec
+184.70,145911,63,2762
+181.19,151740,1416,2816
+
+Starting read test, please wait.
+
+read speed and latency
+speed,max,min,avg
+KB/Sec,usec,usec,usec
+1023.90,2662,444,499
+1024.31,689,444,499
+
+Done
+Type any character to start
+
+****************************************
+
+size, write, read
+bytes, KB/sec, KB/sec
+512, 80.55, 982.59
+1024, 161.47, 1549.85
+2048, 322.35, 2954.06
+4096, 674.20, 4407.52
+8192, 3429.60, 6576.71
+16384, 4242.95, 8707.52
+32768, 4820.67, 9622.30
+
+totalMicros  222525432
+yieldMicros  194909286
+yieldCalls   60417
+yieldMaxUsec 222965
+kHzSdClk     24000
+Done
+
+
+
+-------------------------------------------------------------------------
+SDIO (EX)
+-------------------------------------------------------------------------
+
