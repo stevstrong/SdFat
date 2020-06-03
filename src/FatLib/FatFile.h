@@ -840,7 +840,7 @@ class FatFile {
    * \return true for success else false.
    */
   static bool setCwd(FatFile* dir) {
-    if (!dir->isDir()) {
+    if (!dir || !dir->isDir()) {
       return false;
     }
     m_cwd = dir;
