@@ -16,6 +16,7 @@
   Sparkfun SD shield: pin 8
   Adafruit SD shields and modules: pin 10
 */
+#define SDCARD_SS_PIN PB12
 // SDCARD_SS_PIN is defined for the built-in SD on some boards.
 #ifndef SDCARD_SS_PIN
 const uint8_t SD_CS_PIN = SS;
@@ -44,7 +45,7 @@ const bool PRE_ALLOCATE = true;
 const bool SKIP_FIRST_LATENCY = true;
 
 // Size of read/write.
-const size_t BUF_SIZE = 512;
+const size_t BUF_SIZE = 512*10;
 
 // File size in MB where MB = 1,000,000 bytes.
 const uint32_t FILE_SIZE_MB = 5;
@@ -124,7 +125,7 @@ void setup() {
   while (!Serial) {
     SysCall::yield();
   }
-  delay(1000);
+  delay(10);
   cout << F("\nUse a freshly formatted SD for best performance.\n");
   if (!ENABLE_DEDICATED_SPI) {
     cout << F(
@@ -133,6 +134,7 @@ void setup() {
   }
   // use uppercase in hex and use 0X base prefix
   cout << uppercase << showbase << endl;
+  SPI.setModule(2); // use SPI2
 }
 //------------------------------------------------------------------------------
 void loop() {

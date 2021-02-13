@@ -15,6 +15,8 @@
   Adafruit SD shields and modules: pin 10
 */
 
+#define SDCARD_SS_PIN PB12
+
 // SDCARD_SS_PIN is defined for the built-in SD on some boards.
 #ifndef SDCARD_SS_PIN
 const uint8_t SD_CS_PIN = SS;
@@ -62,12 +64,14 @@ void setup() {
   while (!Serial) {
     SysCall::yield();
   }
+  delay(10);
 
   Serial.println("Type any character to start");
   while (!Serial.available()) {
     SysCall::yield();
   }
 
+  SPI.setModule(2); // use SPI2
   // Initialize the SD.
   if (!sd.begin(SD_CONFIG)) {
     sd.initErrorHalt(&Serial);

@@ -17,6 +17,7 @@ const int8_t DISABLE_CS_PIN = -1;
   Sparkfun SD shield: pin 8
   Adafruit SD shields and modules: pin 10
 */
+#define SDCARD_SS_PIN	PB12
 // SDCARD_SS_PIN is defined for the built-in SD on some boards.
 #ifndef SDCARD_SS_PIN
 const uint8_t SD_CS_PIN = SS;
@@ -208,9 +209,11 @@ void setup() {
   while (!Serial) {
     SysCall::yield();
   }
+  delay(10);
   cout << F("SdFat version: ") << SD_FAT_VERSION_STR << endl;
   printConfig(SD_CONFIG);
 
+  SPI.setModule(2);
 }
 //------------------------------------------------------------------------------
 void loop() {
