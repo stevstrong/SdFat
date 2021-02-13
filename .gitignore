@@ -1,7 +1,15 @@
 #################
+## HTML files
+#################
+*.html
+*.png
+*.css
+*.svg
+*.js
+
+#################
 ## Eclipse
 #################
-
 *.pydevproject
 .project
 .metadata

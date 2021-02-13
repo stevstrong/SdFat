@@ -260,6 +260,18 @@ class FsBaseFile {
     return m_fFile ? m_fFile->isSubDir() :
            m_xFile ? m_xFile->isSubDir() : false;
   }
+  /** \return True if this is a normal file. */
+  bool isFile() const {
+    return m_fFile ? m_fFile->isFile() :
+           m_xFile ? m_xFile->isFile() : false;
+  }
+  /** Open a volume's root directory.
+   *
+   * \param[in] vol The SdFs volume containing the root directory to be opened.
+   *
+   * \return true for success or false for failure.
+   */  
+  bool openRoot(FsVolume* vol);
 #if ENABLE_ARDUINO_SERIAL
   /** List directory contents.
    *

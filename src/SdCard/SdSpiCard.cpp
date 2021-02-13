@@ -225,6 +225,7 @@ bool SdSpiCard::begin(SdSpiConfig spiConfig) {
   m_errorCode = SD_CARD_ERROR_NONE;
   m_type = 0;
   m_csPin = spiConfig.csPin;
+  uint32_t arg;
 #if SPI_DRIVER_SELECT >= 2
   m_spiDriverPtr = spiConfig.spiPort;
   if (!m_spiDriverPtr) {
@@ -295,7 +296,7 @@ bool SdSpiCard::begin(SdSpiConfig spiConfig) {
     type(SD_CARD_TYPE_SD1);
   }
   // initialize card and send host supports SDHC if SD2
-  uint32_t arg = type() == SD_CARD_TYPE_SD2 ? 0X40000000 : 0;
+  arg = type() == SD_CARD_TYPE_SD2 ? 0X40000000 : 0;
   DBG_BEGIN_TIME(DBG_ACMD41_TIME);
   while (cardAcmd(ACMD41, arg) != R1_READY_STATE) {
     DBG_EVENT_COUNT(DBG_ACMD41_COUNT);

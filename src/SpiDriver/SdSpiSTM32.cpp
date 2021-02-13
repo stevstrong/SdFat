@@ -26,13 +26,8 @@
 
 #if defined(SD_USE_CUSTOM_SPI)\
   && (defined(__STM32F1__) || defined(__STM32F4__))
-#if defined(__STM32F1__)
-#define USE_STM32_DMA 1
-#elif defined(__STM32F4__)
-#define USE_STM32_DMA 1
-#else  // defined(__STM32F1__)
-#error Unknown STM32 type
-#endif  // defined(__STM32F1__)
+
+  #define USE_STM32_DMA 1
 
 //------------------------------------------------------------------------------
 void SdSpiArduinoDriver::activate() {
@@ -58,12 +53,12 @@ uint8_t SdSpiArduinoDriver::receive() {
 //------------------------------------------------------------------------------
 uint8_t SdSpiArduinoDriver::receive(uint8_t* buf, size_t count) {
 #if USE_STM32_DMA
-if (n<250) // DMA does not work on addresses on stack (CCMRAM)
-  m_spi->read(buf, n);
+if (count<250) // DMA does not work on addresses on stack (CCMRAM)
+  m_spi->read(buf, count);
 else
-  m_spi->dmaTransfer((uint8_t)0xFF, buf, n);
+  m_spi->dmaTransfer((uint8_t)0xFF, buf, count);
 #else  // USE_STM32_DMA
-  m_spi->read(buf, n);
+  m_spi->read(buf, count);
 #endif  // USE_STM32_DMA
   return 0;
 }
@@ -74,12 +69,16 @@ void SdSpiArduinoDriver::send(uint8_t data) {
 //------------------------------------------------------------------------------
 void SdSpiArduinoDriver::send(const uint8_t* buf , size_t count) {
 #if USE_STM32_DMA
-if (n<250) // DMA does not work with addresses on stack (CCMRAM)
-  m_spi->write(buf, n);
+Serial.write('-'); Serial.print(count); Serial.write('-');
+if (count<250) // DMA does not work with addresses on stack (CCMRAM)
+  m_spi->write(buf, count);
 else
-  m_spi->dmaSend(buf, n);
+  m_spi->dmaSend(buf, count);
 #else  // USE_STM32_DMA
-  m_spi->write(buf, n);
+  m_spi->write(buf, count);
 #endif  // USE_STM32_DMA
 }
+
+#else
+  #error Unknown STM32 type
 #endif  // defined(SD_USE_CUSTOM_SPI) &&  defined(__STM32F1__)

@@ -127,13 +127,14 @@ size_t FatFile::printAccessDate(print_t* pr) {
   }
   return 0;
 }
+/*
 //------------------------------------------------------------------------------
 void FatFile::printFatDate(print_t* pr, uint16_t fatDate) {
-  printU32(pr, FAT_YEAR(fatDate));
+  print(pr, FS_YEAR(fatDate));
   pr->write('-');
-  print2u(pr, FAT_MONTH(fatDate));
+  print(pr, FS_MONTH(fatDate));
   pr->write('-');
-  print2u(pr, FAT_DAY(fatDate));
+  print(pr, FS_DAY(fatDate));
 }
 #include "itoa.h"
 //------------------------------------------------------------------------------
@@ -152,8 +153,9 @@ void FatFile::printFatTime(print_t* pr, uint16_t fatTime) {
 //------------------------------------------------------------------------------
 void FatFile::getFatTime(char* pr, uint16_t fatTime)
 {
-  sprintf(pr, "%02d%02d%02d", FAT_HOUR(fatTime), FAT_MINUTE(fatTime), FAT_SECOND(fatTime));
+  sprintf(pr, "%02d%02d%02d", FS_HOUR(fatTime), FS_MINUTE(fatTime), FS_SECOND(fatTime));
 }
+*/
 //------------------------------------------------------------------------------
 /** Template for FatFile::printField() */
 template <typename Type>
@@ -187,6 +189,7 @@ size_t FatFile::printModifyDateTime(print_t* pr) {
   }
   return 0;
 }
+/*
 //------------------------------------------------------------------------------
 bool FatFile::getModifyDateTime(char* pr)
 {
@@ -202,6 +205,7 @@ bool FatFile::getModifyDateTime(char* pr)
 fail:
   return false;
 }
+*/
 //------------------------------------------------------------------------------
 size_t FatFile::printFileSize(print_t* pr) {
   char buf[11];
