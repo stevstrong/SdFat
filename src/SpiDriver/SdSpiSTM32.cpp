@@ -69,7 +69,6 @@ void SdSpiArduinoDriver::send(uint8_t data) {
 //------------------------------------------------------------------------------
 void SdSpiArduinoDriver::send(const uint8_t* buf , size_t count) {
 #if USE_STM32_DMA
-Serial.write('-'); Serial.print(count); Serial.write('-');
 if (count<250) // DMA does not work with addresses on stack (CCMRAM)
   m_spi->write(buf, count);
 else
