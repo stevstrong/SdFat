@@ -1,6 +1,6 @@
 // Simple performance test for STM32 SDHC.
 // Demonstrates yield() efficiency.
-
+#include <iostream/ArduinoStream.h>
 #include <SdioF4.h> //#include <SdFat.h>
 
 #include "FreeStack.h"
@@ -11,8 +11,8 @@ const int32_t BUF_DIM = 32768;
 // 8 MiB file.
 const uint32_t FILE_SIZE = 256UL*BUF_DIM;
 
-//SdFatSdioEX sd; // DO NOT USE! Will destroy the file structure on the card!
-SdFatSdio sd;
+//SdioFat sd; // old SDIO usage
+SdFat sd; // set USE_SDIO in config file
 
 File file;
 
@@ -37,10 +37,6 @@ bool sdBusy() {
 void errorHalt(const char* msg) {
   sd.errorHalt(msg);
 }
-//------------------------------------------------------------------------------
-uint32_t kHzSdClk() {
-  return sd.card()->kHzSdClk();
-}  
 //------------------------------------------------------------------------------
 // Replace "weak" system yield() function.
 void yield() {
@@ -117,17 +113,15 @@ void runTest() {
   Serial.println(yieldCalls);
   Serial.print("yieldMaxUsec ");
   Serial.println(yieldMaxUsec); 
-  Serial.print("kHzSdClk     ");
-  Serial.println(kHzSdClk());
   Serial.println("Done");
 }
 //------------------------------------------------------------------------------
 // serial output steam
 ArduinoOutStream cout(Serial);
-// global for card size
-uint32_t cardSize;
-// global for card erase size
-uint32_t eraseSize;
+cid_t m_cid;
+csd_t m_csd;
+uint32_t m_eraseSize;
+uint32_t m_ocr;
 
 #define sdErrorMsg(msg) sd.errorPrint(F(msg));
 //------------------------------------------------------------------------------
@@ -155,27 +149,22 @@ uint8_t cidDmp() {
 }
 //------------------------------------------------------------------------------
 uint8_t csdDmp() {
-  csd_t csd;
-  uint8_t eraseSingleBlock;
-  if (!sd.card()->readCSD(&csd)) {
-    sdErrorMsg("readCSD failed");
-    return false;
-  }
-  if (csd.v1.csd_ver == 0) {
-    eraseSingleBlock = csd.v1.erase_blk_en;
-    eraseSize = (csd.v1.sector_size_high << 1) | csd.v1.sector_size_low;
-  } else if (csd.v2.csd_ver == 1) {
-    eraseSingleBlock = csd.v2.erase_blk_en;
-    eraseSize = (csd.v2.sector_size_high << 1) | csd.v2.sector_size_low;
+  bool eraseSingleBlock;
+  if (m_csd.v1.csd_ver == 0) {
+    eraseSingleBlock = m_csd.v1.erase_blk_en;
+    m_eraseSize = (m_csd.v1.sector_size_high << 1) | m_csd.v1.sector_size_low;
+  } else if (m_csd.v2.csd_ver == 1) {
+    eraseSingleBlock = m_csd.v2.erase_blk_en;
+    m_eraseSize = (m_csd.v2.sector_size_high << 1) | m_csd.v2.sector_size_low;
   } else {
-    cout << F("csd version error\n");
+    cout << F("m_csd version error\n");
     return false;
   }
-  eraseSize++;
-  cout << F("cardSize: ") << 0.000512*cardSize;
+  m_eraseSize++;
+  cout << F("cardSize: ") << 0.000512 * sdCardCapacity(&m_csd);
   cout << F(" MB (MB = 1,000,000 bytes)\n");
 
-  cout << F("flashEraseSize: ") << int(eraseSize) << F(" blocks\n");
+  cout << F("flashEraseSize: ") << int(m_eraseSize) << F(" blocks\n");
   cout << F("eraseSingleBlock: ");
   if (eraseSingleBlock) {
     cout << F("true\n");
@@ -189,17 +178,12 @@ void sd_info(void)
 {
   uint32_t t = millis();
 
-  if (!sd.begin()) {
+  if (!sd.begin(DMA_SDIO)) {
     sdErrorMsg("\ncardBegin failed");
     return;
   }
   t = millis() - t;
 
-  cardSize = sd.card()->cardSize();
-  if (cardSize == 0) {
-    sdErrorMsg("cardSize failed");
-    return;
-  }
   cout << F("\ninit time: ") << t << " ms" << endl;
   cout << F("\nCard type: ");
   switch (sd.card()->type()) {
@@ -212,7 +196,7 @@ void sd_info(void)
     break;
 
   case SD_CARD_TYPE_SDHC:
-    if (cardSize < 70000000) {
+    if (sdCardCapacity(&m_csd) < 70000000) {
       cout << F("SDHC\n");
     } else {
       cout << F("SDXC\n");
@@ -240,21 +224,20 @@ void sd_info(void)
 }
 //------------------------------------------------------------------------------
 void volDmp() {
-  cout << F("\nVolume is FAT") << int(sd.vol()->fatType()) << endl;
-  cout << F("blocksPerCluster: ") << int(sd.vol()->blocksPerCluster()) << endl;
-  cout << F("clusterCount: ") << sd.vol()->clusterCount() << endl;
-  cout << F("freeClusters: ");
-  uint32_t volFree = sd.vol()->freeClusterCount();
-  cout <<  volFree << endl;
-  float fs = 0.000512*volFree*sd.vol()->blocksPerCluster();
-  cout << F("freeSpace: ") << fs << F(" MB (MB = 1,000,000 bytes)\n");
-  cout << F("fatStartBlock: ") << sd.vol()->fatStartBlock() << endl;
-  cout << F("fatCount: ") << int(sd.vol()->fatCount()) << endl;
-  cout << F("blocksPerFat: ") << sd.vol()->blocksPerFat() << endl;
-  cout << F("rootDirStart: ") << sd.vol()->rootDirStart() << endl;
-  cout << F("dataStartBlock: ") << sd.vol()->dataStartBlock() << endl;
-  if (sd.vol()->dataStartBlock() % eraseSize) {
-    cout << F("Data area is not aligned on flash erase boundaries!\n");
+  cout << F("\nScanning FAT, please wait.\n");
+  uint32_t freeClusterCount = sd.freeClusterCount();
+  if (sd.fatType() <= 32) {
+    cout << F("\nVolume is FAT") << int(sd.fatType()) << endl;
+  } else {
+    cout << F("\nVolume is exFAT\n");
+  }
+  cout << F("sectorsPerCluster: ") << sd.sectorsPerCluster() << endl;
+  cout << F("clusterCount:      ") << sd.clusterCount() << endl;
+  cout << F("freeClusterCount:  ") << freeClusterCount << endl;
+  cout << F("fatStartSector:    ") << sd.fatStartSector() << endl;
+  cout << F("dataStartSector:   ") << sd.dataStartSector() << endl;
+  if (sd.dataStartSector() % m_eraseSize) {
+    cout << F("Data area is not aligned on flash erase boundary!\n");
     cout << F("Download and use formatter from www.sdcard.org!\n");
   }
 }
