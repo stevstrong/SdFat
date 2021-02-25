@@ -340,6 +340,7 @@ typedef uint8_t SdCsPin_t;
   || defined(__STM32F1__) || defined(__STM32F4__)\
   || (defined(CORE_TEENSY) && defined(__arm__))
 #define SD_HAS_CUSTOM_SPI 1
+#define HAS_SDIO_CLASS 1 // enable for F4 boards having SDIO sockets
 #else  // SD_HAS_CUSTOM_SPI
 // Use standard SPI library.
 #define SD_HAS_CUSTOM_SPI 0

@@ -1,7 +1,7 @@
 // Simple performance test for STM32 SDHC.
 // Demonstrates yield() efficiency.
-#include <iostream/ArduinoStream.h>
 #include <SdioF4.h> //#include <SdFat.h>
+#include <iostream/ArduinoStream.h>
 
 #include "FreeStack.h"
 

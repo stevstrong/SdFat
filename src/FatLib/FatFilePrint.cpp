@@ -193,7 +193,7 @@ size_t FatFile::printModifyDateTime(print_t* pr) {
 //------------------------------------------------------------------------------
 bool FatFile::getModifyDateTime(char* pr)
 {
-  dir_t dir;
+  DirFat_t dir;
   if (!dirEntry(&dir)) {
     DBG_FAIL_MACRO;
     goto fail;
