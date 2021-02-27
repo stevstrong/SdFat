@@ -265,6 +265,11 @@ class FsBaseFile {
    * \return true if the file is a directory.
    */
   bool isDirectory() const {return isDir();}
+  /** \return True if this is a subdirectory file else false. */
+  bool isSubDir() const {
+    return m_fFile ? m_fFile->isSubDir() :
+           m_xFile ? m_xFile->isSubDir() : false;
+  }
   /** \return True if this is a normal file. */
   bool isFile() const {
     return m_fFile ? m_fFile->isFile() :
@@ -287,24 +292,6 @@ class FsBaseFile {
     return m_fFile ? m_fFile->isReadOnly() :
            m_xFile ? m_xFile->isReadOnly() : false;
   }
-  /** \return True if this is a subdirectory file else false. */
-  bool isSubDir() const {
-    return m_fFile ? m_fFile->isSubDir() :
-           m_xFile ? m_xFile->isSubDir() : false;
-  }
-  /** \return True if this is a normal file. */
-  bool isFile() const {
-    return m_fFile ? m_fFile->isFile() :
-           m_xFile ? m_xFile->isFile() : false;
-  }
-  /** Open a volume's root directory.
-   *
-   * \param[in] vol The SdFs volume containing the root directory to be opened.
-   *
-   * \return true for success or false for failure.
-   */  
-  bool openRoot(FsVolume* vol);
-
   /** \return True file is writable. */
   bool isWritable() const {
     return m_fFile ? m_fFile->isWritable() :
